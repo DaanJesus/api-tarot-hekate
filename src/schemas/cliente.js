@@ -2,14 +2,15 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs')
 
 let ClienteSchema = new mongoose.Schema({
-    nome: {
+    name: {
         type: String
     },
     email: {
         type: String
     },
     password: {
-        type: String
+        type: String,
+        select: false
     },
     createdAt: {
         type: Date,

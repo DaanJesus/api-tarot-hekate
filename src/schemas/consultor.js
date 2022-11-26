@@ -9,7 +9,8 @@ let ConsultorSchema = new mongoose.Schema({
         type: String
     },
     password: {
-        type: String
+        type: String,
+        select: false
     },
     avaliation: {
         type: Number

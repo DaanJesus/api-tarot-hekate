@@ -26,7 +26,6 @@ router.post(
   multer(multerConfig).single("file"),
   async (req, res) => {
     try {
-
       const {
         originalname: nome_file,
         size,
@@ -34,17 +33,24 @@ router.post(
         location: url = "",
       } = req.file;
 
-      const { name, email, password, avaliation, value, status, description, categoria/* , cep, bairro, numero, rua, cpf */ } =
-        req.body;
+      const {
+        name,
+        email,
+        password,
+        avaliation,
+        value,
+        status,
+        description,
+        categoria /* , cep, bairro, numero, rua, cpf */,
+      } = req.body;
 
       if (
-        await Cliente.findOne({
+        (await Cliente.findOne({
           email,
-        }) ||
-        await Consultor.findOne({
+        })) ||
+        (await Consultor.findOne({
           email,
-        })
-
+        }))
       ) {
         return res.status(400).json({
           error: "Este e-mail ja foi utilizado.",
@@ -72,7 +78,6 @@ router.post(
             id: cliente._id,
           }),
         });
-
       } else {
         const consultor = await Consultor.create({
           name,
@@ -99,7 +104,6 @@ router.post(
           }),
         });
       }
-
     } catch (err) {
       console.log(err);
       return res.status(400).json({
@@ -116,9 +120,7 @@ router.post("/authenticate", async (req, res) => {
     console.log(req.body);
 
     if (categoria == "cliente") {
-      const cliente = await Cliente.findOne(
-        { email }
-      ).select("+password");
+      const cliente = await Cliente.findOne({ email }).select("+password");
 
       if (!cliente) {
         return res.status(400).json({
@@ -140,13 +142,10 @@ router.post("/authenticate", async (req, res) => {
           id: cliente._id,
         }),
         message: "Login efetuado com sucesso!",
-        categoria: "cliente"
+        categoria: "cliente",
       });
     } else {
-
-      const consultor = await Consultor.findOne(
-        { email }
-      ).select("+password");
+      const consultor = await Consultor.findOne({ email }).select("+password");
 
       if (!consultor) {
         return res.status(400).json({
@@ -168,12 +167,31 @@ router.post("/authenticate", async (req, res) => {
           id: consultor._id,
         }),
         message: "Login efetuado com sucesso!",
-        categoria: "consultor"
+        categoria: "consultor",
       });
     }
   } catch (err) {
     console.log(err);
   }
 });
+
+/* router.get("/get-user", async (req, res) => {
+  try {
+    const { _id } = req.params;
+
+    console.log(_id);
+
+    const cliente = await Cliente.findOne({ _id }).select("-password");
+
+    if (cliente) {
+      res.status(200).json(cliente);
+    } else {
+      const consultor = await Consultor.findOne({ _id }).select("-password");
+      res.status(200).json(consultor);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}); */
 
 module.exports = (app) => app.use("/auth", router);

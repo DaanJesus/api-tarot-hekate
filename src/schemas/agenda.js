@@ -2,27 +2,44 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs')
 
 let AgendaSchema = new mongoose.Schema({
-    cliente: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Cliente'
-    },
     consultor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Consultor'
     },
+    cliente: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Cliente'
+    },
     agenda: {
-        data_consulta: {
-            type: Date
-        },
-        hora_inicio: {
+        hora_inicio_consulta: {
             type: String
         },
-        hora_fim: {
+        hora_fim_consulta: {
             type: String
         },
-        valor: {
+        inicio_consulta: {
+            type: String
+        },
+        fim_consulta: {
             type: String
         }
+    },
+    avaliacao: {
+        estrelas: {
+            type: String
+        },
+        descricao: {
+            type: String
+        },
+        nivel: {
+            type: String
+        }
+    },
+    valor: {
+        type: String
+    },
+    confirma_agenda: {
+        type: Boolean
     },
     createdAt: {
         type: Date,

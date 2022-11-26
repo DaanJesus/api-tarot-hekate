@@ -5,55 +5,56 @@
  */
 
 const express = require("express");
+const authMiddleware = require("../middleware/auth");
+const Agenda = require("../schemas/agenda");
 const Consultor = require("../schemas/consultor");
 const router = express.Router();
 
+//router.use(authMiddleware);
+
 router.post("/update", async (req, res) => {
-    try {
-        const alter = await Consultor.updateMany({},
-            {
-                '$set': {
-                    'image.url': "http://localhost:5000/files/fed325ab3f5ce0decabe901b37c58fdc-juh.jpg"
-                }
-            }, { multi: true });
+  try {
+    const alter = await Agenda.updateMany(
+      {},
+      {
+        $set: {
+          avaliacao: {
+            estrelas: Math.floor(Math.random() * (5 - 0) + 0),
+            descricao: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna",
+            nivel: "Muito bom"
+          }
+        },
+      },
+      { multi: true }
+    );
 
-        res.send(alter)
-
-    }
-    catch (err) {
-        res.status(400).json(err)
-    }
-})
+    res.status(200).json(alter);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
 
 router.get("/consulters", async (req, res) => {
-    try {
+  try {
+    const consulters = await Consultor.find();
 
-        const consulters = await Consultor.find();
-
-        res.status(200).json(
-            consulters
-        );
-
-    } catch (err) {
-        res.status(400).json(err);
-    }
+    res.status(200).json(consulters);
+  } catch (err) {
+    res.status(400).json(err);
+  }
 });
 
 router.get("/consultor/:id", async (req, res) => {
+  const { id } = req.params;
 
-    const { id } = req.params
+  try {
+    const consultor = await Consultor.findOne({ _id: id });
 
-    try {
-
-        const consultor = await Consultor.findOne({ _id: id }).select("-password")
-
-        res.status(200).json(
-            consultor
-        );
-
-    } catch (err) {
-        res.status(400).json(err);
-    }
+    return res.status(200).json(consultor);
+  } catch (err) {
+    return res.status(400).json(err);
+  }
 });
 
 module.exports = (app) => app.use("/list", router);
