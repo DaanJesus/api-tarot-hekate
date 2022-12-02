@@ -7,14 +7,17 @@ const path = require("path");
 const cors = require("cors");
 const app = express();
 
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, {
+  options: {
+    cors: '*'
+  }
+});
+
 const SERVER_PORT = Number(process.env.SERVER_PORT || 5000);
 
 let host = `localhost:${SERVER_PORT}`;
 let _schemas = "http";
-
-app.get("/", function (req, res) {
-  res.redirect("/api-docs/");
-});
 
 mongoose
   .connect(process.env.URL_MONGO, {
@@ -60,4 +63,29 @@ app.get("/", async (req, res) => {
 
 require("./routes/index")(app);
 
-app.listen(process.env.PORT || 5000);
+server.listen(SERVER_PORT, () => {
+  console.log("Application runnig port ", SERVER_PORT);
+});
+
+io.on('connection', (client) => {
+  console.log(client.id)
+  
+  client.on('join', (data) => {
+    console.log('User logado: ', data.id);
+
+    client.join(data.room);
+    client.broadcast.to(data.room).emit('user joined');
+
+    /* const roomName = data.roomName;
+    socket.join(roomName);
+    socket.to(roomName).broadcast.emit('new-user', data)
+
+    socket.on('disconnect', () => {
+      socket.to(roomName).broadcast.emit('bye-user', data)
+    }) */
+  })
+
+  client.on('message', (data) => {
+    io.in(data.room).emit('new message', { user: data.user, message: data.message })
+  })
+})

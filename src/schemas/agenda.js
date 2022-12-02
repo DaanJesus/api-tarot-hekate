@@ -26,7 +26,8 @@ let AgendaSchema = new mongoose.Schema({
     },
     avaliacao: {
         estrelas: {
-            type: String
+            type: String,
+            
         },
         descricao: {
             type: String
