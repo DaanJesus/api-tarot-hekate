@@ -8,16 +8,13 @@ const express = require("express");
 const Agenda = require("../schemas/agenda");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
-const sdk = require("api")("@devpagseguro/v2.0#1fbzyjg0la9zasaj");
 
 //router.use(authMiddleware);
 
 router.post("/agendar", async (req, res) => {
+
+  let consulta = req.body
   try {
-
-    const consulta = req.body;
-
-    console.log(consulta);
 
     const resp = await Agenda.create(
       consulta
@@ -34,7 +31,8 @@ router.get("/agenda-consultor/:_id", async (req, res) => {
   const { _id } = req.params;
 
   try {
-    const agenda = await Agenda.find({ consultor: _id });
+    const agenda = await Agenda.find({ consultor: _id })
+      .populate('consultor');
 
     res.status(200).json(agenda);
   } catch (err) {
@@ -46,7 +44,8 @@ router.get("/minha-agenda/:_id", async (req, res) => {
   const { _id } = req.params;
 
   try {
-    const agenda = await Agenda.find({ cliente: _id });
+    const agenda = await Agenda.find({ cliente: _id })
+      .populate('cliente');
 
     res.status(200).json(agenda);
   } catch (err) {

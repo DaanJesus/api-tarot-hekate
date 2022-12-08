@@ -14,20 +14,17 @@ const router = express.Router();
 
 router.post("/update", async (req, res) => {
   try {
-    const alter = await Agenda.updateMany(
+    const alter = await Cliente.updateMany(
       {},
       {
         $set: {
-          avaliacao: {
-            estrelas: Math.floor(Math.random() * (5 - 0) + 0),
-            descricao: "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna",
-            nivel: "Muito bom"
-          }
+          typelogin: "administrador"
         },
       },
       { multi: true }
     );
 
+    console.log("Chegou");
     res.status(200).json(alter);
   } catch (err) {
     console.log(err);

@@ -27,7 +27,7 @@ let AgendaSchema = new mongoose.Schema({
     avaliacao: {
         estrelas: {
             type: String,
-            
+
         },
         descricao: {
             type: String
@@ -41,6 +41,9 @@ let AgendaSchema = new mongoose.Schema({
     },
     confirma_agenda: {
         type: Boolean
+    },
+    uuid: {
+        type: String
     },
     createdAt: {
         type: Date,

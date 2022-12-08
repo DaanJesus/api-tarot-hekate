@@ -122,20 +122,21 @@ router.post("/authenticate", async (req, res) => {
     if (categoria == "cliente") {
       const cliente = await Cliente.findOne({ email }).select("+password");
 
+      
       if (!cliente) {
         return res.status(400).json({
           error: "Usuário não encontrado.",
         });
       }
-
+      
       if (!(await bcrypt.compare(password, cliente.password))) {
         return res.status(400).json({
           error: "Senha inválida.",
         });
       }
-
+      
       cliente.password = undefined;
-
+      
       res.status(200).json({
         cliente,
         token: generateToken({
@@ -152,12 +153,13 @@ router.post("/authenticate", async (req, res) => {
           error: "Usuário não encontrado.",
         });
       }
-
+      
       if (!(await bcrypt.compare(password, consultor.password))) {
         return res.status(400).json({
           error: "Senha inválida.",
         });
       }
+      
 
       consultor.password = undefined;
 

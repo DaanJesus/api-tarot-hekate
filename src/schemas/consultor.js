@@ -46,6 +46,9 @@ let ConsultorSchema = new mongoose.Schema({
             default: Date.now
         }
     },
+    typelogin: {
+        type: String
+    }
     /* historico: [{
         type: Schema.Types.ObjectId,
         ref: 'Historico'
