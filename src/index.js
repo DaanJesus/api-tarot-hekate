@@ -2,6 +2,8 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
+const swaggerUI = require('swagger-ui-express');
+const swaggerJsDoc = require('./swaggerDocs.json');
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
@@ -152,6 +154,8 @@ app.use(
     extended: true,
   })
 );
+
+app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc));
 
 app.use(morgan("dev"));
 app.use(
