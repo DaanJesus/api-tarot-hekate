@@ -21,19 +21,70 @@ function generateToken(params = {}) {
   });
 }
 
-router.post(
-  "/register",
-  multer(multerConfig).single("file"),
-  async (req, res) => {
-    try {
-      const {
-        originalname: nome_file,
-        size,
-        key,
-        location: url = "",
-      } = req.file;
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Cliente:
+ *      
+ */
 
-      const {
+router.post("/register", multer(multerConfig).single("file"), async (req, res) => {
+  try {
+    const {
+      originalname: nome_file,
+      size,
+      key,
+      location: url = "",
+    } = req.file;
+
+    const {
+      name,
+      email,
+      password,
+      avaliation,
+      value,
+      status,
+      description,
+      categoria /* , cep, bairro, numero, rua, cpf */,
+    } = req.body;
+
+    if (
+      (await Cliente.findOne({
+        email,
+      })) ||
+      (await Consultor.findOne({
+        email,
+      }))
+    ) {
+      return res.status(400).json({
+        error: "Este e-mail ja foi utilizado.",
+      });
+    }
+
+    if (categoria == "cliente") {
+      const cliente = await Cliente.create({
+        nome,
+        email,
+        password,
+        image: {
+          nome_file,
+          size,
+          key,
+          url,
+        },
+      });
+
+      cliente.password = undefined;
+
+      return res.json({
+        cliente,
+        token: generateToken({
+          id: cliente._id,
+        }),
+      });
+    } else {
+      const consultor = await Consultor.create({
         name,
         email,
         password,
@@ -41,76 +92,30 @@ router.post(
         value,
         status,
         description,
-        categoria /* , cep, bairro, numero, rua, cpf */,
-      } = req.body;
+        image: {
+          nome_file,
+          size,
+          key,
+          url,
+        },
+      });
 
-      if (
-        (await Cliente.findOne({
-          email,
-        })) ||
-        (await Consultor.findOne({
-          email,
-        }))
-      ) {
-        return res.status(400).json({
-          error: "Este e-mail ja foi utilizado.",
-        });
-      }
+      consultor.password = undefined;
 
-      if (categoria == "cliente") {
-        const cliente = await Cliente.create({
-          nome,
-          email,
-          password,
-          image: {
-            nome_file,
-            size,
-            key,
-            url,
-          },
-        });
-
-        cliente.password = undefined;
-
-        return res.json({
-          cliente,
-          token: generateToken({
-            id: cliente._id,
-          }),
-        });
-      } else {
-        const consultor = await Consultor.create({
-          name,
-          email,
-          password,
-          avaliation,
-          value,
-          status,
-          description,
-          image: {
-            nome_file,
-            size,
-            key,
-            url,
-          },
-        });
-
-        consultor.password = undefined;
-
-        return res.json({
-          consultor,
-          token: generateToken({
-            id: consultor._id,
-          }),
-        });
-      }
-    } catch (err) {
-      console.log(err);
-      return res.status(400).json({
-        error: "Falha ao registrar usuário.    " + err,
+      return res.json({
+        consultor,
+        token: generateToken({
+          id: consultor._id,
+        }),
       });
     }
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({
+      error: "Falha ao registrar usuário.    " + err,
+    });
   }
+}
 );
 
 router.post("/authenticate", async (req, res) => {
@@ -122,21 +127,21 @@ router.post("/authenticate", async (req, res) => {
     if (categoria == "cliente") {
       const cliente = await Cliente.findOne({ email }).select("+password");
 
-      
+
       if (!cliente) {
         return res.status(400).json({
           error: "Usuário não encontrado.",
         });
       }
-      
+
       if (!(await bcrypt.compare(password, cliente.password))) {
         return res.status(400).json({
           error: "Senha inválida.",
         });
       }
-      
+
       cliente.password = undefined;
-      
+
       res.status(200).json({
         cliente,
         token: generateToken({
@@ -153,13 +158,13 @@ router.post("/authenticate", async (req, res) => {
           error: "Usuário não encontrado.",
         });
       }
-      
+
       if (!(await bcrypt.compare(password, consultor.password))) {
         return res.status(400).json({
           error: "Senha inválida.",
         });
       }
-      
+
 
       consultor.password = undefined;
 

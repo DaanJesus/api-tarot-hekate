@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "nodemon src/index.js",
     "test": "nodemon src/index.js"
   },
   "author": "",
@@ -36,6 +36,7 @@
     "path": "^0.12.7",
     "peer": "^0.6.1",
     "socket.io": "^2.5.0",
+    "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0"
   },
   "devDependencies": {
