@@ -24,10 +24,6 @@ function generateToken(params = {}) {
 
 router.post("/register", multer(multerConfig).single("file"), async (req, res) => {
 
-  console.log("File: ", req.file, "Body", JSON.parse(req.body.form));
-
-  console.log(JSON.parse(req.body.form));
-
   try {
     const {
       originalname: nome_file,
