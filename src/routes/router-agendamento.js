@@ -6,6 +6,7 @@
 
 const express = require("express");
 const Agenda = require("../schemas/agenda");
+const Consultor = require("../schemas/consultor");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
 
@@ -49,6 +50,48 @@ router.get("/minha-agenda/:_id", async (req, res) => {
 
     res.status(200).json(agenda);
   } catch (err) {
+    res.status(400).json({ error: err });
+  }
+});
+
+router.post("/send-feedback", async (req, res) => {
+
+  try {
+
+    const { consultor, avaliacao, url, name, comentario } = req.body
+
+    const agenda = await Consultor.findOneAndUpdate({ _id: consultor }, {
+      $push: {
+        avaliation: {
+          url,
+          name,
+          avaliacao,
+          comentario
+        }
+      },
+    },
+      { multi: false })
+
+    const resConsultor = await Consultor.findOne({ _id: consultor })
+
+    var length = resConsultor.avaliation.length
+    var media = 0;
+
+    resConsultor.avaliation.forEach(element => {
+      media += parseFloat(element.avaliacao)
+    });
+
+    var total = media / length;
+
+    const response = await Consultor.findOneAndUpdate({ _id: consultor }, {
+      $set: {
+        mediaAvaliacao: total.toFixed(1)
+      }
+    })
+
+    res.status(200).json("Feedback enviado com sucesso!");
+  } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err });
   }
 });

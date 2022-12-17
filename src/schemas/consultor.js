@@ -12,8 +12,29 @@ let ConsultorSchema = new mongoose.Schema({
         type: String,
         select: false
     },
-    avaliation: {
+    mediaAvaliacao: {
         type: Number
+    },
+    avaliation: [{
+        url: {
+            type: String
+        },
+        name: {
+            type: String
+        },
+        avaliacao: {
+            type: String
+        },
+        comentario: {
+            type: String
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+    }],
+    description: {
+        type: String
     },
     value: {
         type: Number
@@ -28,9 +49,6 @@ let ConsultorSchema = new mongoose.Schema({
         tempo: {
             type: String
         }
-    },
-    description: {
-        type: String
     },
     createdAt: {
         type: Date,
@@ -74,7 +92,7 @@ ConsultorSchema.pre("remove", function () {
     //console.log("Chegou aqui", this.image.key);
     if (process.env.STORAGE_TYPE == 's3') {
         return s3.deleteObject({
-            Bucket: 'uploadforsale',
+            Bucket: 'tarothekate',
             Key: this.image.key
         }).promise();
     } else {

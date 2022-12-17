@@ -14,11 +14,11 @@ const router = express.Router();
 
 router.post("/update", async (req, res) => {
   try {
-    const alter = await Cliente.updateMany(
+    const alter = await Consultor.updateMany(
       {},
       {
         $set: {
-          typelogin: "administrador"
+          mediaAvaliacao: 5
         },
       },
       { multi: true }
