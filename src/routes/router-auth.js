@@ -14,22 +14,18 @@ const authConfig = require("../config/auth.json");
 const crypto = require("crypto");
 const multerConfig = require("../config/multer");
 const multer = require("multer");
+const Token = require("../schemas/token");
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 86400,
+    expiresIn: 3600,
   });
 }
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    Cliente:
- *      
- */
-
 router.post("/register", multer(multerConfig).single("file"), async (req, res) => {
+
+  console.log("File: ", req.file, "Body", JSON.parse(req.body.form));
+
   try {
     const {
       originalname: nome_file,
@@ -43,28 +39,25 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       email,
       password,
       avaliation,
-      value,
       status,
       description,
-      categoria /* , cep, bairro, numero, rua, cpf */,
-    } = req.body;
+      typelogin
+    } = JSON.parse(req.body.form);
 
-    if (
-      (await Cliente.findOne({
-        email,
-      })) ||
-      (await Consultor.findOne({
-        email,
-      }))
-    ) {
-      return res.status(400).json({
-        error: "Este e-mail ja foi utilizado.",
-      });
-    }
+    if (typelogin == "cliente") {
 
-    if (categoria == "cliente") {
+      if (
+        (await Cliente.findOne({
+          email,
+        }))
+      ) {
+        return res.status(400).json({
+          error: "Este e-mail ja foi utilizado.",
+        });
+      }
+
       const cliente = await Cliente.create({
-        nome,
+        name,
         email,
         password,
         image: {
@@ -84,12 +77,22 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
         }),
       });
     } else {
+
+      if (
+        (await Consultor.findOne({
+          email,
+        }))
+      ) {
+        return res.status(400).json({
+          error: "Este e-mail ja foi utilizado.",
+        });
+      }
+
       const consultor = await Consultor.create({
         name,
         email,
         password,
         avaliation,
-        value,
         status,
         description,
         image: {
@@ -115,14 +118,11 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       error: "Falha ao registrar usuário.    " + err,
     });
   }
-}
-);
+});
 
 router.post("/authenticate", async (req, res) => {
   try {
     const { email, password, categoria } = req.body;
-
-    console.log(req.body);
 
     if (categoria == "cliente") {
       const cliente = await Cliente.findOne({ email }).select("+password");
@@ -181,6 +181,89 @@ router.post("/authenticate", async (req, res) => {
     console.log(err);
   }
 });
+
+router.post('/geraToken', async (req, res) => {
+
+  try {
+
+    const { cpf } = req.body
+
+    if (!cpf) {
+      res.status(400).json({
+        err: "Você deve informar o cpf do tarologo! "
+      })
+
+      return
+    }
+
+    var token = generateToken({
+      id: cpf,
+    })
+
+    var tokenGerad = await Token.create({ token: token })
+
+    res.status(200).json({
+      token: tokenGerad,
+      message: "Token cadastrado",
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      err: "Não foi possível gerar o token! " + err
+    })
+    console.log(err);
+  }
+})
+
+router.post('/validaToken', async (req, res) => {
+
+  try {
+
+    const { token } = req.body
+
+    console.log(req.body);
+
+    if (!token) {
+      res.status(400).json({
+        err: "Informe o token que recebeu por e-mail! "
+      })
+
+      return
+    }
+
+    var validaToken = await Token.findOne({ token: token })
+
+    if (validaToken) {
+
+      jwt.verify(token, authConfig.secret, async (err, decoded) => {
+        if (err) {
+          await Token.deleteOne({ token: token })
+          return res.status(401).json({
+            err: "Este token expirou... por favor entre em contato com nossa equipe para gerar um novo.",
+          });
+        }
+
+        await Token.deleteOne({ token: token })
+
+        res.status(200).json({
+          message: "Token validado",
+          token: true
+        });
+      })
+
+    } else {
+      res.status(401).json({
+        message: "Token inválido",
+        token: false
+      });
+    }
+
+  } catch (err) {
+    res.status(400).json({
+      err: "Não foi possível validar o token! " + err
+    })
+  }
+})
 
 /* router.get("/get-user", async (req, res) => {
   try {
