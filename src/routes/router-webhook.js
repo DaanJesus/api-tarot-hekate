@@ -9,7 +9,7 @@ const gerencianet = new Gerencianet(options);
 options['validateMtls'] = true;
 
 let body = {
-    "webhookUrl": "http://localhost:5000/webhook/"
+    "webhookUrl": "http://api.tarothekate/webhook/"
 }
 
 let params = {
