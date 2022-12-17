@@ -26,6 +26,8 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
 
   console.log("File: ", req.file, "Body", JSON.parse(req.body.form));
 
+  console.log(JSON.parse(req.body.form));
+
   try {
     const {
       originalname: nome_file,
@@ -41,10 +43,10 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       avaliation,
       status,
       description,
-      typelogin
+      categoria
     } = JSON.parse(req.body.form);
 
-    if (typelogin == "cliente") {
+    if (categoria == "cliente") {
 
       if (
         (await Cliente.findOne({
@@ -60,6 +62,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
         name,
         email,
         password,
+        typelogin: categoria,
         image: {
           nome_file,
           size,
@@ -95,6 +98,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
         avaliation,
         status,
         description,
+        typelogin: categoria,
         image: {
           nome_file,
           size,
