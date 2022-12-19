@@ -12,16 +12,16 @@ var fs = require("fs");
 const app = express();
 const credentials = require('./credentials/credentials')
 
-/* const httpsOptions = {
+const httpsOptions = {
   cert: fs.readFileSync(process.env.FULL_CERT), // Certificado fullchain do dominio
   key: fs.readFileSync(process.env.PRIV_CERT), // Chave privada do domínio
   ca: fs.readFileSync(process.env.PUB_GERENCIA_CERT),   // Certificado público da Gerencianet
   minVersion: "TLSv1.2",
   requestCert: true,
   rejectUnauthorized: false, //Mantenha como false para que os demais endpoints da API não rejeitem requisições sem MTLS
-}; */
+};
 
-const server = require('http').Server(/* httpsOptions, */ app)
+const server = require('http').Server(httpsOptions, app)
 const io = require('socket.io')(server, {
   options: {
     cors: '*'
@@ -143,10 +143,6 @@ io.on('connection', (socket) => {
 
 })
 
-
-let host = `localhost:${SERVER_PORT}`;
-let _schemas = "http";
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -182,7 +178,7 @@ mongoose
   })
   .then(
     () => {
-      console.log("Success connect to: ", host);
+      console.log("Success connect to: ", SERVER_PORT);
     },
     (err) => {
       console.log("Error connect to: " + err);

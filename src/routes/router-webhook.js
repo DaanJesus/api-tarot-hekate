@@ -9,14 +9,14 @@ const gerencianet = new Gerencianet(options);
 options['validateMtls'] = true;
 
 let body = {
-    "webhookUrl": "http://api.tarothekate/webhook/"
+    "webhookUrl": "https://api.tarothekate.com"
 }
 
 let params = {
     "chave": "fb525436-eb0b-405f-9366-663bd0c176ea"
 }
 
-router.post("/config-webhook", (request, response) => {
+router.post("/config-webhook", (req, res) => {
 
     try {
 

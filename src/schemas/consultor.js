@@ -41,13 +41,12 @@ let ConsultorSchema = new mongoose.Schema({
     },
     status: {
         status: {
-            type: String
+            type: String,
+            default: "Disponível"
         },
         mensagem: {
-            type: String
-        },
-        tempo: {
-            type: String
+            type: String,
+            default: "Em que posso te ajudar hoje?"
         }
     },
     createdAt: {
