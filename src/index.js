@@ -143,10 +143,6 @@ io.on('connection', (socket) => {
 
 })
 
-
-let host = `localhost:${SERVER_PORT}`;
-let _schemas = "http";
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -182,7 +178,7 @@ mongoose
   })
   .then(
     () => {
-      console.log("Success connect to: ", host);
+      console.log("Success connect to: ", SERVER_PORT);
     },
     (err) => {
       console.log("Error connect to: " + err);
