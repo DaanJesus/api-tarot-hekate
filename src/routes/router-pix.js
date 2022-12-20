@@ -28,6 +28,8 @@ router.post('/create', async (req, res) => {
 
     const body = req.body;
 
+    console.log(body);
+
     try {
 
         gerencianet.pixCreateImmediateCharge([], body)
@@ -41,7 +43,7 @@ router.post('/create', async (req, res) => {
                     gerencianet.pixGenerateQRCode(payload)
                         .then((qrcode) => {
                             res.status(200).json({ resposta, qrcode })
-                            
+
                         })
                         .catch((error) => {
                             res.status(400).json(error);
@@ -61,7 +63,7 @@ router.post('/create', async (req, res) => {
 })
 
 router.post('/status', async (req, res) => {
-    
+
     console.log(req.body);
 
     let params = {
@@ -113,7 +115,7 @@ router.get('/listPix', async (req, res) => {
 
 router.post("/webhook", (request, response) => {
     // Verifica se a requisição que chegou nesse endpoint foi autorizada
-    if (request.socket.authorized) { 
+    if (request.socket.authorized) {
         response.status(200).end();
     } else {
         response.status(401).end();
@@ -121,7 +123,7 @@ router.post("/webhook", (request, response) => {
 });
 
 router.post("/webhook/pix", (request, response) => {
-    if (request.socket.authorized){
+    if (request.socket.authorized) {
         //Seu código tratando a callback
         /* EXEMPLO:
         var body = request.body;
@@ -134,7 +136,7 @@ router.post("/webhook/pix", (request, response) => {
             }
         })*/
         response.status(200).end();
-    }else{
+    } else {
         response.status(401).end();
     }
 });

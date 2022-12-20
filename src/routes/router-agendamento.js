@@ -83,7 +83,7 @@ router.post("/send-feedback", async (req, res) => {
 
     var total = media / length;
 
-    const response = await Consultor.findOneAndUpdate({ _id: consultor }, {
+    await Consultor.findOneAndUpdate({ _id: consultor }, {
       $set: {
         mediaAvaliacao: total.toFixed(1)
       }
