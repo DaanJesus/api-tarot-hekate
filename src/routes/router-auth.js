@@ -18,7 +18,7 @@ const Token = require("../schemas/token");
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
-    expiresIn: 3600,
+    expiresIn: 86400,
   });
 }
 

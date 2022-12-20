@@ -12,7 +12,7 @@ router.post("/status", async (req, res) => {
     const { _id, status, mensagem, tempo } = req.body;
 
     const alter = await Consultor.findOneAndUpdate(
-      {_id: _id},
+      { _id: _id },
       {
         $set: {
           status: {
@@ -26,6 +26,22 @@ router.post("/status", async (req, res) => {
     );
 
     res.status(200).json(alter);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
+router.get("/comments/:id", async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const comments = await Consultor.findOne({ _id: id })
+      .skip(0)
+      .limit(5)
+
+    res.status(200).json(comments.avaliation);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);

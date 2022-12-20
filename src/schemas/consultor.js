@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const aws = require("aws-sdk");
+
+const s3 = new aws.S3();
 
 let ConsultorSchema = new mongoose.Schema({
     name: {

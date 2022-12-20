@@ -9,23 +9,23 @@ const gerencianet = new Gerencianet(options);
 options['validateMtls'] = true;
 
 let body = {
-    "webhookUrl": "https://api.tarothekate.com"
+    "webhookUrl": "https://api.tarothekate.com/webhook/"
 }
 
 let params = {
     "chave": "fb525436-eb0b-405f-9366-663bd0c176ea"
 }
 
-router.post("/config-webhook", (req, res) => {
+router.post("/", (req, res) => {
 
     try {
 
         gerencianet.pixConfigWebhook(params, body)
             .then((resposta) => {
-                console.log(resposta);
+                res.status(200).json(resposta)
             })
             .catch((error) => {
-                console.log(error);
+                res.status(400).json(error);
             })
 
     } catch (error) {
@@ -33,23 +33,25 @@ router.post("/config-webhook", (req, res) => {
     }
 });
 
-router.post("/webhook/pix", (request, response) => {
-    if (request.socket.authorized) {
-        //Seu código tratando a callback
-        /* EXEMPLO:
-        var body = request.body;
-        filePath = __dirname + "/data.json";
-        fs.appendFile(filePath, JSON.stringify(body) + "\n", function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                response.status(200).end();
-            }
-        })*/
-        response.status(200).end();
-    } else {
-        response.status(401).end();
+router.get("/:chave", (req, res) => {
+
+    try {
+        const { chave } = req.params;
+
+        gerencianet.pixDetailWebhook(chave)
+            .then((resposta) => {
+                console.log(resposta);
+                res.status(200).json(resposta)
+            })
+            .catch((error) => {
+                console.log(error);
+                res.status(400).json(error)
+            })
+
+    } catch (err) {
+        res.status(400).json(err)
     }
+
 });
 
 module.exports = (app) => app.use("/webhook", router);
