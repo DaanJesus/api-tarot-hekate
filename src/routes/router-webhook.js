@@ -4,9 +4,9 @@ var fs = require("fs");
 
 const Gerencianet = require('gn-api-sdk-node');
 const options = require('../credentials/credentials');
-const gerencianet = new Gerencianet(options);
 
 options['validateMtls'] = true;
+const gerencianet = new Gerencianet(options);
 
 let body = {
     "webhookUrl": "https://api.tarothekate.com/webhook/"
@@ -16,7 +16,7 @@ let params = {
     "chave": "fb525436-eb0b-405f-9366-663bd0c176ea"
 }
 
-router.post("/", (req, res) => {
+router.put("/", (req, res) => {
 
     try {
 
@@ -32,6 +32,34 @@ router.post("/", (req, res) => {
         res.status(400).json(error);
     }
 });
+
+router.post("/", (req, res) => {
+
+    if (req.socket.authorized) {
+        res.status(200).end();
+    } else {
+        res.status(401).end();
+    }
+});
+
+router.post("/pix", (req, res) => {
+    if (req.socket.authorized) {
+
+        var body = req.body;
+        var filePath = __dirname + "../data.json";
+        fs.appendFile(filePath, JSON.stringify(body) + "\n", function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                response.status(200).end();
+            }
+        })
+
+        res.status(200).end();
+    } else {
+        res.status(401).end();
+    }
+})
 
 router.get("/:chave", (req, res) => {
 

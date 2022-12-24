@@ -7,6 +7,7 @@
 const express = require("express");
 const Agenda = require("../schemas/agenda");
 const Consultor = require("../schemas/consultor");
+const Comments = require("../schemas/comments");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
 
@@ -60,35 +61,41 @@ router.post("/send-feedback", async (req, res) => {
 
     const { consultor, avaliacao, url, name, comentario } = req.body
 
-    const agenda = await Consultor.findOneAndUpdate({ _id: consultor }, {
-      $push: {
-        avaliation: {
-          url,
-          name,
-          avaliacao,
-          comentario
-        }
-      },
-    },
-      { multi: false })
-
-    const resConsultor = await Consultor.findOne({ _id: consultor })
-
-    var length = resConsultor.avaliation.length
-    var media = 0;
-
-    resConsultor.avaliation.forEach(element => {
-      media += parseFloat(element.avaliacao)
-    });
-
-    var total = media / length;
-
-    await Consultor.findOneAndUpdate({ _id: consultor }, {
-      $set: {
-        mediaAvaliacao: total.toFixed(1)
-      }
+    await Comments.create({
+      url,
+      name,
+      avaliacao,
+      comentario,
+      consultor
     })
 
+    const resConsultor = await Comments.find({ consultor: consultor })
+
+    if (resConsultor) {
+
+      var length = resConsultor.length
+      var media = 0;
+
+      resConsultor.forEach(element => {
+        media += parseFloat(element.avaliacao)
+      });
+
+      var total = media / length;
+
+      await Consultor.findOneAndUpdate({ _id: consultor }, {
+        $set: {
+          mediaAvaliacao: total.toFixed(1),
+          baseAvaliacao: length
+        }
+      })
+    } else {
+      await Consultor.findOneAndUpdate({ _id: consultor }, {
+        $set: {
+          mediaAvaliacao: avaliacao,
+          baseAvaliacao: length
+        }
+      })
+    }
     res.status(200).json("Feedback enviado com sucesso!");
   } catch (err) {
     console.log(err);

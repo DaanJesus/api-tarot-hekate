@@ -1,6 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware/auth");
-const Agenda = require("../schemas/agenda");
+const Comments = require("../schemas/comments");
 const Consultor = require("../schemas/consultor");
 const router = express.Router();
 
@@ -9,23 +9,38 @@ const router = express.Router();
 router.post("/status", async (req, res) => {
   try {
 
-    const { _id, status, mensagem, tempo } = req.body;
+    console.log(req.body);
+    const { _id, value, classe } = req.body;
 
-    const alter = await Consultor.findOneAndUpdate(
+    await Consultor.findOneAndUpdate(
       { _id: _id },
       {
         $set: {
           status: {
-            status: status,
-            mensagem: mensagem,
-            tempo: tempo
+            value,
+            classe
           }
         },
-      },
-      { multi: true }
+      }
     );
 
-    res.status(200).json(alter);
+    const response = await Consultor.findOne({ _id: _id })
+
+    res.status(200).json(response.status);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
+router.get("/get-status/:id", async (req, res) => {
+  try {
+
+    const { id } = req.params;
+
+    const status = await Consultor.findOne({ _id: id })
+
+    res.status(200).json(status.status);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
@@ -36,12 +51,44 @@ router.get("/comments/:id", async (req, res) => {
   try {
 
     const { id } = req.params;
+    const { page = 1, limit = 5 } = req.query
 
-    const comments = await Consultor.findOne({ _id: id })
-      .skip(0)
-      .limit(5)
+    const comments = await Comments.find({ consultor: id })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .exec()
 
-    res.status(200).json(comments.avaliation);
+    const count = await Comments.find({ consultor: id }).count()
+
+    res.status(200).json({
+      totalPages: Math.ceil(count / limit),
+      totalComments: count,
+      currentPage: page,
+      comments
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
+router.post("/save-video", async (req, res) => {
+  try {
+
+    const { consultor, video } = req.body;
+
+    console.log(req.body);
+
+    await Consultor.findOneAndUpdate({ _id: consultor },
+      {
+        $set: {
+          video: video
+        }
+      })
+
+    var user = await Consultor.findOne({ _id: consultor })
+
+    res.status(200).json(user);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);
