@@ -18,7 +18,7 @@ router.post("/update", async (req, res) => {
       {},
       {
         $set: {
-          mediaAvaliacao: 5
+          baseAvaliacao: 0
         },
       },
       { multi: true }
@@ -47,8 +47,9 @@ router.get("/consultor/:id", async (req, res) => {
 
   try {
     const consultor = await Consultor.findOne({ _id: id });
+    const totalConsultas = await Agenda.find({ consultor: id }).count();
 
-    return res.status(200).json(consultor);
+    return res.status(200).json({consultor, totalConsultas});
   } catch (err) {
     return res.status(400).json(err);
   }

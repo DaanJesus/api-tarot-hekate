@@ -18,38 +18,27 @@ let ConsultorSchema = new mongoose.Schema({
     mediaAvaliacao: {
         type: Number
     },
-    avaliation: [{
-        url: {
-            type: String
-        },
-        name: {
-            type: String
-        },
-        avaliacao: {
-            type: String
-        },
-        comentario: {
-            type: String
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        },
-    }],
+    baseAvaliacao: {
+        type: Number,
+        default: 0
+    },
     description: {
         type: String
     },
     value: {
         type: Number
     },
+    video: {
+        type: String
+    },
     status: {
-        status: {
+        value: {
             type: String,
             default: "Disponível"
         },
-        mensagem: {
+        classe: {
             type: String,
-            default: "Em que posso te ajudar hoje?"
+            default: "disponivel"
         }
     },
     createdAt: {

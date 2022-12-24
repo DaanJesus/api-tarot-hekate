@@ -10,7 +10,6 @@ const cors = require("cors");
 var fs = require("fs");
 
 const app = express();
-const credentials = require('./credentials/credentials')
 
 const httpsOptions = {
   cert: fs.readFileSync(process.env.FULL_CERT), // Certificado fullchain do dominio
