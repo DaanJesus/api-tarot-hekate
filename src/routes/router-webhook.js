@@ -46,8 +46,7 @@ router.post("/pix", (req, res) => {
     if (req.socket.authorized) {
 
         var body = req.body;
-        var filePath = __dirname + "../data.json";
-        fs.appendFile(filePath, JSON.stringify(body) + "\n", function (err) {
+        fs.appendFile(__dirname + "../data.json", JSON.stringify(body) + "\n", function (err) {
             if (err) {
                 console.log(err);
             } else {

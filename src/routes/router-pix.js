@@ -28,8 +28,6 @@ router.post('/create', async (req, res) => {
 
     const body = req.body;
 
-    console.log(body);
-
     try {
 
         gerencianet.pixCreateImmediateCharge([], body)

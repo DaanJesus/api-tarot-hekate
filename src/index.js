@@ -128,15 +128,16 @@ io.on('connection', (socket) => {
 
   socket.on('voice', data => {
 
-    var newData = data.split(";");
-    newData[0] = "data:audio/ogg;";
-    newData = newData[0] + newData[1];
+    console.log("voice", data);
 
-    for (const id in socketsStatus) {
+    /* room.find((element, index) => {
 
-      if (id != socketId && !socketsStatus[id].mute && socketsStatus[id].online)
-        socket.broadcast.to(id).emit("received-voice", newData);
-    }
+      if (data.roomId == element.roomId) {
+        room[index].messages.push(data.message)
+        socket.broadcast.to(room[index].roomId).emit('receivedMessage', data.message)
+      }
+    }) */
+
   })
 
 })
