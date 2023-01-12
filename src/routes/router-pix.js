@@ -28,11 +28,9 @@ router.post('/create', async (req, res) => {
 
     const body = req.body;
 
-    console.log(body);
-
     try {
 
-        gerencianet.pixCreateImmediateCharge([], body)
+        await gerencianet.pixCreateImmediateCharge([], body)
             .then((resposta) => {
 
                 if (resposta['txid']) {
@@ -112,33 +110,5 @@ router.get('/listPix', async (req, res) => {
         res.status(400).json({ err });
     }
 })
-
-router.post("/webhook", (request, response) => {
-    // Verifica se a requisição que chegou nesse endpoint foi autorizada
-    if (request.socket.authorized) {
-        response.status(200).end();
-    } else {
-        response.status(401).end();
-    }
-});
-
-router.post("/webhook/pix", (request, response) => {
-    if (request.socket.authorized) {
-        //Seu código tratando a callback
-        /* EXEMPLO:
-        var body = request.body;
-        filePath = __dirname + "/data.json";
-        fs.appendFile(filePath, JSON.stringify(body) + "\n", function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                response.status(200).end();
-            }
-        })*/
-        response.status(200).end();
-    } else {
-        response.status(401).end();
-    }
-});
 
 module.exports = (app) => app.use("/pix", router);
