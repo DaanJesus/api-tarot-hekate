@@ -32,7 +32,7 @@ router.post('/create', async (req, res) => {
 
     try {
 
-        await gerencianet.pixCreateImmediateCharge([], body)
+        gerencianet.pixCreateImmediateCharge([], body)
             .then((resposta) => {
 
                 if (resposta['txid']) {
