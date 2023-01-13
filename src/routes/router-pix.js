@@ -28,12 +28,11 @@ router.post('/create', async (req, res) => {
 
     const body = req.body;
 
-    console.log(req.body);
-
     try {
 
         gerencianet.pixCreateImmediateCharge([], body)
             .then((resposta) => {
+                console.log("pixCreate ", resposta);
 
                 if (resposta['txid']) {
                     var payload = {
@@ -46,7 +45,7 @@ router.post('/create', async (req, res) => {
 
                         })
                         .catch((error) => {
-                            console.log("pixGenerateQRCode ",error);
+                            console.log("pixGenerateQRCode ", error);
                             res.status(400).json(error);
 
                         })
@@ -54,12 +53,12 @@ router.post('/create', async (req, res) => {
 
             })
             .catch((error) => {
-                console.log("pixCreateImmediateCharge ",error);
+                console.log("pixCreateImmediateCharge ", error);
                 res.status(400).json(error);
             })
 
     } catch (err) {
-        console.log(err);
+        console.log('Request', err);
         res.status(400).json({ err });
     }
 })
