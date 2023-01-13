@@ -35,17 +35,24 @@ router.put("/", (req, res) => {
 
 router.post("/", (req, res) => {
 
+    console.log(req.socket.authorized);
+
     if (req.socket.authorized) {
+        console.log('deu bom');
         res.status(200).end();
     } else {
+        console.log('deu ruim');
         res.status(401).end();
     }
 });
 
 router.post("/pix", (req, res) => {
+
+    console.log("chegou no /pix");
     if (req.socket.authorized) {
 
         var body = req.body;
+        console.log("/pix", req.body);
         var filePath = __dirname + "../data.json";
         fs.appendFile(filePath, JSON.stringify(body) + "\n", function (err) {
             if (err) {
