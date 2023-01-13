@@ -16,11 +16,6 @@ let params = {
     "chave": "fb525436-eb0b-405f-9366-663bd0c176ea"
 }
 
-router.post("/(/pix)?", (req, res) => {
-    console.log(req.body);
-    res.status(200).end();
-});
-
 /* router.post("/pix", (req, res) => {
 
     console.log("chegou no /pix");

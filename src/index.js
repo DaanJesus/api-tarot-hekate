@@ -159,6 +159,11 @@ app.get("/", async (req, res) => {
   res.redirect("/api-docs");
 });
 
+app.post("/webhook(/pix)?", (req, res) => {
+  console.log(req.body);
+  res.status(200).end();
+});
+
 require("./routes/index")(app);
 
 mongoose
