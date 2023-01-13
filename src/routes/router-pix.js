@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-var fs = require("fs");
+const GNRequest = require('../config/gerencianet')
 
 const Gerencianet = require('gn-api-sdk-node');
 const options = require('../credentials/credentials');
 const gerencianet = new Gerencianet(options);
+const reqGnAlready = GNRequest();
 
 router.post('/evp', async (req, res) => {
     try {
@@ -26,36 +27,15 @@ router.post('/evp', async (req, res) => {
 
 router.post('/create', async (req, res) => {
 
+    const reqGn = await reqGnAlready;
     const body = req.body;
 
     try {
 
-        gerencianet.pixCreateImmediateCharge([], body)
-            .then((resposta) => {
-                console.log("pixCreate ", resposta);
+        const cobResponse = await reqGn.post('/v2/cob', body)
+        const qrCodeResponse = await reqGn.get(`/v2/loc/${cobResponse.data.loc.id}/qrcode`)
 
-                if (resposta['txid']) {
-                    var payload = {
-                        'id': resposta['loc']['id']
-                    }
-
-                    gerencianet.pixGenerateQRCode(payload)
-                        .then((qrcode) => {
-                            res.status(200).json({ resposta, qrcode })
-
-                        })
-                        .catch((error) => {
-                            console.log("pixGenerateQRCode ", error);
-                            res.status(400).json(error);
-
-                        })
-                }
-
-            })
-            .catch((error) => {
-                console.log("pixCreateImmediateCharge ", error);
-                res.status(400).json(error);
-            })
+        res.status(200).json({ resposta: cobResponse.data, qrcode: qrCodeResponse.data })
 
     } catch (err) {
         console.log('Request', err);

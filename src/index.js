@@ -7,6 +7,8 @@ const swaggerJsDoc = require('./swaggerDocs.json');
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
+const axios = require("axios");
+const https = require("https");
 var fs = require("fs");
 
 const app = express();

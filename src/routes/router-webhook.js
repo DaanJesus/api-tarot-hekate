@@ -16,37 +16,12 @@ let params = {
     "chave": "fb525436-eb0b-405f-9366-663bd0c176ea"
 }
 
-router.put("/", (req, res) => {
-
-    try {
-
-        gerencianet.pixConfigWebhook(params, body)
-            .then((resposta) => {
-                res.status(200).json(resposta)
-            })
-            .catch((error) => {
-                res.status(400).json(error);
-            })
-
-    } catch (error) {
-        res.status(400).json(error);
-    }
+router.post("/(/pix)?", (req, res) => {
+    console.log(req.body);
+    res.status(200).end();
 });
 
-router.post("/", (req, res) => {
-
-    console.log(req.socket.authorized);
-
-    if (req.socket.authorized) {
-        console.log('deu bom');
-        res.status(200).end();
-    } else {
-        console.log('deu ruim');
-        res.status(401).end();
-    }
-});
-
-router.post("/pix", (req, res) => {
+/* router.post("/pix", (req, res) => {
 
     console.log("chegou no /pix");
     if (req.socket.authorized) {
@@ -66,7 +41,7 @@ router.post("/pix", (req, res) => {
     } else {
         res.status(401).json("falha ao geristrar webhook");
     }
-})
+}) */
 
 router.get("/:chave", (req, res) => {
 
