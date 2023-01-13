@@ -55,9 +55,9 @@ router.post("/pix", (req, res) => {
             }
         })
 
-        res.status(200).end();
+        res.status(200).json("Sucesso ao registrar o webhook");
     } else {
-        res.status(401).end();
+        res.status(401).json("falha ao geristrar webhook");
     }
 })
 

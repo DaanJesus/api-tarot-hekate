@@ -28,6 +28,8 @@ router.post('/create', async (req, res) => {
 
     const body = req.body;
 
+    console.log(req.body);
+
     try {
 
         await gerencianet.pixCreateImmediateCharge([], body)
@@ -44,6 +46,7 @@ router.post('/create', async (req, res) => {
 
                         })
                         .catch((error) => {
+                            console.log("pixGenerateQRCode ",error);
                             res.status(400).json(error);
 
                         })
@@ -51,6 +54,7 @@ router.post('/create', async (req, res) => {
 
             })
             .catch((error) => {
+                console.log("pixCreateImmediateCharge ",error);
                 res.status(400).json(error);
             })
 
