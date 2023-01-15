@@ -7,9 +7,7 @@ const swaggerJsDoc = require('./swaggerDocs.json');
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
-const axios = require("axios");
-const https = require("https");
-var fs = require("fs");
+const Pix = require("./schemas/pix");
 
 const app = express();
 
@@ -145,23 +143,31 @@ app.use(
 
 app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerJsDoc));
 
+app.use(express.json());
 app.use(morgan("dev"));
 app.use(
   "/files",
   express.static(path.resolve(__dirname, "..", "tmp", "uploads"))
 );
 
-app.set("view engine", "ejs");
-
-app.use(express.json());
-
 app.get("/", async (req, res) => {
   res.redirect("/api-docs");
 });
 
-app.post("/webhook(/pix)?", (req, res) => {
+app.post("/webhook(/pix)?", async (req, res) => {
   console.log(req.body);
-  res.status(200).end();
+
+  if (req.status == 200) {
+    await Pix.findOneAndUpdate({ txid: req.body.pix[0].txid }, {
+      $set: {
+        status: "Finalizado" /* alterar isso aqui */
+      },
+    })
+    res.status(200).json({ message: "Pagamento processado com sucesso." });
+    return
+  }
+
+  res.status(400).json({ message: "Falha ao processar o pagamento." })
 });
 
 require("./routes/index")(app);
