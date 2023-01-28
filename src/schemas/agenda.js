@@ -42,9 +42,6 @@ let AgendaSchema = new mongoose.Schema({
     confirma_agenda: {
         type: Boolean
     },
-    uuid: {
-        type: String
-    },
     createdAt: {
         type: Date,
         default: Date.now

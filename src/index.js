@@ -7,7 +7,6 @@ const swaggerJsDoc = require('./swaggerDocs.json');
 const morgan = require("morgan");
 const path = require("path");
 const cors = require("cors");
-const Pix = require("./schemas/pix");
 
 const app = express();
 
@@ -157,17 +156,17 @@ app.get("/", async (req, res) => {
 app.post("/webhook(/pix)?", async (req, res) => {
   console.log(req.body);
 
-  if (req.status == 200) {
+  /* if (req.status == 200) {
     await Pix.findOneAndUpdate({ txid: req.body.pix[0].txid }, {
       $set: {
-        status: "Finalizado" /* alterar isso aqui */
+        status: "Finalizado"
       },
     })
     res.status(200).json({ message: "Pagamento processado com sucesso." });
     return
   }
 
-  res.status(400).json({ message: "Falha ao processar o pagamento." })
+  res.status(400).json({ message: "Falha ao processar o pagamento." }) */
 });
 
 require("./routes/index")(app);

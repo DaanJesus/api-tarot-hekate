@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const Pix = require("../schemas/pix");
 
 const GNRequest = require('../config/gerencianet')
 
@@ -35,17 +34,11 @@ router.post('/create', async (req, res) => {
     try {
 
         const cobResponse = await reqGn.post('/v2/cob', body)
+        if (!cobResponse.data.loc.id) {
+            return res.status(400).json("Houve um erro ao tentar criar a cobrança.")
+        }
+
         const qrCodeResponse = await reqGn.get(`/v2/loc/${cobResponse.data.loc.id}/qrcode`)
-
-        console.log(cobResponse.data)
-
-        await Pix.create({
-            status: cobResponse.data.status,
-            txid: cobResponse.data.txid,
-            devedor: cobResponse.data.devedor.cpf,
-            valor: cobResponse.data.valor.original,
-        })
-
         res.status(200).json({ resposta: cobResponse.data, qrcode: qrCodeResponse.data })
 
     } catch (err) {
@@ -54,17 +47,22 @@ router.post('/create', async (req, res) => {
     }
 })
 
-router.post('/status', async (req, res) => {
+router.get('/status/:txid', async (req, res) => {
 
-    console.log(req.body);
-
+    var interval;
+    const { txid } = req.params
     const reqGn = await reqGnAlready;
+    var pixStatus;
 
     try {
+        interval = setInterval(async () => {
+            pixStatus = await reqGn.get(`/v2/cob/${txid}`)
 
-        const pixStatus = await reqGn.get(`/v2/cob/${req.body.txid}`)
-
-        res.status(200).json(pixStatus.data)
+            if (pixStatus && pixStatus.data.status == "CONCLUIDA") {
+                clearInterval(interval);
+                res.status(200).json(pixStatus.data)
+            }
+        }, 3000)
 
     } catch (err) {
         console.log(err);
@@ -74,8 +72,8 @@ router.post('/status', async (req, res) => {
 
 router.get('/listPix', async (req, res) => {
     let params = {
-        inicio: "2022-12-01T16:01:35Z",
-        fim: "2022-12-31T08:37:35Z"
+        inicio: "2023-01-15T16:01:35Z",
+        fim: "2023-01-16T12:37:35Z"
     }
     try {
 
