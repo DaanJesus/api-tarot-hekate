@@ -9,7 +9,6 @@ const router = express.Router();
 router.post("/status", async (req, res) => {
   try {
 
-    console.log(req.body);
     const { _id, value, classe } = req.body;
 
     await Consultor.findOneAndUpdate(

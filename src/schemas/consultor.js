@@ -16,20 +16,20 @@ let ConsultorSchema = new mongoose.Schema({
         select: false
     },
     mediaAvaliacao: {
-        type: Number
+        type: Number,
+        default: 0
     },
     baseAvaliacao: {
         type: Number,
         default: 0
     },
     description: {
-        type: String
-    },
-    value: {
-        type: Number
+        type: String,
+        default: ''
     },
     video: {
-        type: String
+        type: String,
+        default: ''
     },
     status: {
         value: {
@@ -55,17 +55,25 @@ let ConsultorSchema = new mongoose.Schema({
             default: Date.now
         }
     },
+    notify: [{
+        title: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        status: {
+            type: Boolean,
+            default: false
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     typelogin: {
         type: String
     }
-    /* historico: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Historico'
-    }],
-    comentarios: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Comentarios'
-    }], */
 });
 
 ConsultorSchema.pre('save', async function (next) {

@@ -2,13 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const GNRequest = require('../config/gerencianet')
-
-const Gerencianet = require('gn-api-sdk-node');
-const options = require('../credentials/credentials');
-const gerencianet = new Gerencianet(options);
 const reqGnAlready = GNRequest();
 
-router.post('/evp', async (req, res) => {
+/* router.post('/evp', async (req, res) => {
     try {
 
         gerencianet.gnCreateEvp()
@@ -24,7 +20,7 @@ router.post('/evp', async (req, res) => {
     } catch (error) {
         res.status(400).json(error);
     }
-})
+}) */
 
 router.post('/create', async (req, res) => {
 
@@ -70,7 +66,7 @@ router.get('/status/:txid', async (req, res) => {
     }
 })
 
-router.get('/listPix', async (req, res) => {
+/* router.get('/listPix', async (req, res) => {
     let params = {
         inicio: "2023-01-15T16:01:35Z",
         fim: "2023-01-16T12:37:35Z"
@@ -93,6 +89,6 @@ router.get('/listPix', async (req, res) => {
         console.log(err);
         res.status(400).json({ err });
     }
-})
+}) */
 
 module.exports = (app) => app.use("/pix", router);

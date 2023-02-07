@@ -18,7 +18,10 @@ router.post("/update", async (req, res) => {
       {},
       {
         $set: {
-          baseAvaliacao: 0
+          notify: [{
+            title: "Promoção 20%",
+            description: "Estamos com 20% de desconto nas tiragens de cartas até as 20hrs do dia 10/02",
+          }]
         },
       },
       { multi: true }
@@ -49,7 +52,7 @@ router.get("/consultor/:id", async (req, res) => {
     const consultor = await Consultor.findOne({ _id: id });
     const totalConsultas = await Agenda.find({ consultor: id }).count();
 
-    return res.status(200).json({consultor, totalConsultas});
+    return res.status(200).json({ consultor, totalConsultas });
   } catch (err) {
     return res.status(400).json(err);
   }
