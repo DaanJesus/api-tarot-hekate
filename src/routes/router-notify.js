@@ -35,6 +35,7 @@ router.get("/get-notify/:id", async (req, res) => {
         const { id } = req.params;
 
         const user = await Consultor.findOne({ _id: id })
+            .sort({ notify: 'desc' })
 
         res.status(200).json(user.notify);
     } catch (err) {
