@@ -1,5 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware/auth");
+const Cliente = require("../schemas/cliente");
 const Comments = require("../schemas/comments");
 const Consultor = require("../schemas/consultor");
 const router = express.Router();
@@ -20,24 +21,38 @@ router.post("/send-notify", async (req, res) => {
             }
         );
 
-        const response = await Consultor.find()
+        await Cliente.updateMany(
+            {},
+            {
+                $push: {
+                    notify
+                },
+            }
+        );
 
-        res.status(200).json(response);
+        res.status(200).json("Notificação enviada com sucesso!");
     } catch (err) {
         console.log(err);
         res.status(400).json(err);
     }
 });
 
-router.get("/get-notify/:id", async (req, res) => {
+router.get("/get-notify/:id/:typelogin", async (req, res) => {
     try {
 
-        const { id } = req.params;
+        const { id, typelogin } = req.params;
 
-        const user = await Consultor.findOne({ _id: id })
-            .sort({ notify: 'desc' })
+        if (typelogin == 'administrador') {
+            const user = await Consultor.findOne({ _id: id })
+
+            res.status(200).json(user.notify);
+            return
+        }
+
+        const user = await Cliente.findOne({ _id: id })
 
         res.status(200).json(user.notify);
+
     } catch (err) {
         console.log(err);
         res.status(400).json(err);

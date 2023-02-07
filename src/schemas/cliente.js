@@ -28,15 +28,23 @@ let ClienteSchema = new mongoose.Schema({
     },
     typelogin: {
         type: String
-    }
-    /* historico: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Historico'
+    },
+    notify: [{
+        title: {
+            type: String
+        },
+        description: {
+            type: String
+        },
+        status: {
+            type: Boolean,
+            default: false
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now
+        }
     }],
-    comentarios: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Comentarios'
-    }], */
 });
 
 ClienteSchema.pre('save', async function (next) {
