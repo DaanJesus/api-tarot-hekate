@@ -3,12 +3,13 @@ var fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-const cert = fs.readFileSync(path.resolve(__dirname, `../credentials/prod.p12`))
+const cert = fs.readFileSync(path.resolve(__dirname, process.env.PATH_CERTIFICADO))
 
 const credential = Buffer(
     `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
 ).toString('base64')
 
+console.log(credential);
 const agent = new https.Agent({
     pfx: cert,
     passphrase: ''
