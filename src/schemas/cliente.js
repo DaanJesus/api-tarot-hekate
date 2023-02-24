@@ -8,6 +8,10 @@ let ClienteSchema = new mongoose.Schema({
     email: {
         type: String
     },
+    cpf: {
+        type: String,
+        unique: true
+    },
     password: {
         type: String,
         select: false

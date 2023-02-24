@@ -35,6 +35,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
     const {
       name,
       email,
+      cpf,
       password,
       avaliation,
       status,
@@ -57,6 +58,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       const cliente = await Cliente.create({
         name,
         email,
+        cpf,
         password,
         typelogin: categoria,
         image: {
