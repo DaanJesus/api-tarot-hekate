@@ -38,6 +38,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       cpf,
       password,
       avaliation,
+      typelogin,
       status,
       description,
       categoria
@@ -60,7 +61,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
         email,
         cpf,
         password,
-        typelogin: categoria,
+        typelogin,
         image: {
           nome_file,
           size,
@@ -88,7 +89,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
           error: "Este e-mail ja foi utilizado.",
         });
       }
-
+      
       const consultor = await Consultor.create({
         name,
         email,
@@ -96,7 +97,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
         avaliation,
         status,
         description,
-        typelogin: categoria,
+        typelogin,
         image: {
           nome_file,
           size,
@@ -189,6 +190,8 @@ router.post('/geraToken', async (req, res) => {
   try {
 
     const { cpf } = req.body
+
+    console.log(cpf);
 
     if (!cpf) {
       res.status(400).json({

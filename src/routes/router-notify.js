@@ -51,7 +51,9 @@ router.get("/get-notify/:id/:typelogin", async (req, res) => {
 
         const user = await Cliente.findOne({ _id: id })
 
-        res.status(200).json(user.notify);
+        if(user){
+            res.status(200).json(user.notify);
+        }
 
     } catch (err) {
         console.log(err);

@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 
 let NotifySchema = new mongoose.Schema({
     title: {
-        type: String
+        type: String,
+        default: 'Bem vindo'
     },
     description: {
-        type: String
+        type: String,
+        default: 'Seja bem vindo ao Tarot da Hékate'
     },
     status: {
         type: Boolean,

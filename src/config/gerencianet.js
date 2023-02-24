@@ -9,7 +9,6 @@ const credential = Buffer(
     `${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`
 ).toString('base64')
 
-console.log(credential);
 const agent = new https.Agent({
     pfx: cert,
     passphrase: ''

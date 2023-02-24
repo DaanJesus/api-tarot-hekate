@@ -57,10 +57,12 @@ let ConsultorSchema = new mongoose.Schema({
     },
     notify: [{
         title: {
-            type: String
+            type: String,
+            default: "Bem Vindo"
         },
         description: {
-            type: String
+            type: String,
+            default: "É um prazer te-lo conosco"
         },
         status: {
             type: Boolean,
