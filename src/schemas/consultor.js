@@ -17,7 +17,7 @@ let ConsultorSchema = new mongoose.Schema({
     },
     mediaAvaliacao: {
         type: Number,
-        default: 0
+        default: 5
     },
     baseAvaliacao: {
         type: Number,
