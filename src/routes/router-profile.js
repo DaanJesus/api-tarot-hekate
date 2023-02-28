@@ -94,4 +94,27 @@ router.post("/save-video", async (req, res) => {
   }
 });
 
+router.post("/plantao", async (req, res) => {
+  try {
+
+    const { expediente, id } = req.body;
+
+    console.log(expediente, id);
+
+    await Consultor.findOneAndUpdate({ _id: id },
+      {
+        $set: {
+          'plantao.fim': expediente
+        }
+      })
+
+    var user = await Consultor.findOne({ _id: id })
+
+    res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
 module.exports = (app) => app.use("/config", router);

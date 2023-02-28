@@ -31,6 +31,24 @@ let ConsultorSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
+    plantao: {
+        inicio: {
+            type: String,
+            default: "10:00"
+        },
+        pausa: {
+            type: String,
+            default: "13:20"
+        },
+        fimpausa: {
+            type: String,
+            default: "13:30"
+        },
+        fim: {
+            type: String,
+            default: "17:00"
+        }
+    },
     status: {
         value: {
             type: String,

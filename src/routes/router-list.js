@@ -18,10 +18,12 @@ router.post("/update", async (req, res) => {
       {},
       {
         $set: {
-          notify: [{
-            title: "Promoção 20%",
-            description: "Estamos com 20% de desconto nas tiragens de cartas até as 20hrs do dia 10/02",
-          }]
+          plantao: {
+            inicio: "10:00",
+            pausa: "13:20",
+            fimpausa: "13:30",
+            fim: "17:00"
+          },
         },
       },
       { multi: true }

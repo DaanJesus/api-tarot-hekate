@@ -25,6 +25,8 @@ function generateToken(params = {}) {
 router.post("/register", multer(multerConfig).single("file"), async (req, res) => {
 
   try {
+
+    console.log(req.file);
     const {
       originalname: nome_file,
       size,
@@ -89,7 +91,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
           error: "Este e-mail ja foi utilizado.",
         });
       }
-      
+
       const consultor = await Consultor.create({
         name,
         email,
