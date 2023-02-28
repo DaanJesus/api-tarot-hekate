@@ -44,10 +44,13 @@ router.get("/agenda-consultor/:_id", async (req, res) => {
 
 router.get("/minha-agenda/:_id", async (req, res) => {
   const { _id } = req.params;
+  console.log(_id);
 
   try {
     const agenda = await Agenda.find({ cliente: _id })
       .populate('cliente');
+
+      console.log(agenda);
 
     res.status(200).json(agenda);
   } catch (err) {
