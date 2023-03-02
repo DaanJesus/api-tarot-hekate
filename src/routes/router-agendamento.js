@@ -50,7 +50,7 @@ router.get("/minha-agenda/:_id", async (req, res) => {
     const agenda = await Agenda.find({ cliente: _id })
       .populate('cliente');
 
-      console.log(agenda);
+    console.log(agenda);
 
     res.status(200).json(agenda);
   } catch (err) {

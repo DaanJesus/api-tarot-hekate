@@ -1,5 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware/auth");
+const Agenda = require("../schemas/agenda");
 const Comments = require("../schemas/comments");
 const Consultor = require("../schemas/consultor");
 const router = express.Router();
@@ -111,6 +112,24 @@ router.post("/plantao", async (req, res) => {
     var user = await Consultor.findOne({ _id: id })
 
     res.status(200).json(user);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err);
+  }
+});
+
+router.post("/dashboard", async (req, res) => {
+  try {
+
+    const { id } = req.body;
+
+    console.log(id);
+
+    await Agenda.findOneAndUpdate({ consultor: id })
+
+    var result = await Consultor.findOne({ _id: id })
+
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     res.status(400).json(err);

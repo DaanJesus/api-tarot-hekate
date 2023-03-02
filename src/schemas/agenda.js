@@ -27,7 +27,6 @@ let AgendaSchema = new mongoose.Schema({
     avaliacao: {
         estrelas: {
             type: String,
-
         },
         descricao: {
             type: String
@@ -38,6 +37,16 @@ let AgendaSchema = new mongoose.Schema({
     },
     valor: {
         type: String
+    },
+    valortarologo: {
+        type: String
+    },
+    valorsite: {
+        type: String
+    },
+    feedback: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Comments'
     },
     confirma_agenda: {
         type: Boolean

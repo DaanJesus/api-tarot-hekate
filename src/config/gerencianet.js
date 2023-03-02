@@ -31,7 +31,7 @@ const authenticate = () => {
 
 const GNRequest = async () => {
     const authResponse = await authenticate();
-    const accessToken = authResponse.data?.access_token;
+    const accessToken = authResponse.data.access_token;
 
     return axios.create({
         baseURL: process.env.URL_PIX,
