@@ -51,7 +51,7 @@ router.get("/get-notify/:id/:typelogin", async (req, res) => {
 
         const user = await Cliente.findOne({ _id: id })
 
-        if(user){
+        if (user) {
             res.status(200).json(user.notify);
         }
 
@@ -65,8 +65,6 @@ router.post("/att-notify", async (req, res) => {
     try {
 
         const { id } = req.body;
-
-        console.log(id);
 
         await Consultor.updateOne(
             { 'notify._id': id },
@@ -90,8 +88,6 @@ router.post("/save-video", async (req, res) => {
     try {
 
         const { consultor, video } = req.body;
-
-        console.log(req.body);
 
         await Consultor.findOneAndUpdate({ _id: consultor },
             {

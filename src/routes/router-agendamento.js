@@ -106,6 +106,21 @@ router.post("/send-feedback", async (req, res) => {
   }
 });
 
+router.get("/feedback/:id", async (req, res) => {
+
+  try {
+
+    const { id } = req.params;
+
+    const feedbacks = await Comments.find({ consultor: id })
+
+    res.status(200).json(feedbacks);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({ error: err });
+  }
+});
+
 router.get("/historico/:_id", async (req, res) => {
   const { _id } = req.params;
   console.log(_id);

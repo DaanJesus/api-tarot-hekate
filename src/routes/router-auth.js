@@ -26,12 +26,19 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
 
   try {
 
+    const img = {
+      nome_file: "profile.png",
+      size: 24378,
+      key: "6ff837f9e14f57d1a55d930137b14f25-profile.png",
+      url: "https://tarothekate.s3.amazonaws.com/6ff837f9e14f57d1a55d930137b14f25-profile.png",
+    }
+
     const {
       originalname: nome_file,
       size,
       key,
       location: url = "",
-    } = req.file;
+    } = req.file == null? img : req.file;
 
     const {
       name,

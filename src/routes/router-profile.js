@@ -66,8 +66,8 @@ router.get("/comments/:id", async (req, res) => {
       currentPage: page,
       comments
     });
+
   } catch (err) {
-    console.log(err);
     res.status(400).json(err);
   }
 });
@@ -76,8 +76,6 @@ router.post("/save-video", async (req, res) => {
   try {
 
     const { consultor, video } = req.body;
-
-    console.log(req.body);
 
     await Consultor.findOneAndUpdate({ _id: consultor },
       {
@@ -100,12 +98,11 @@ router.post("/plantao", async (req, res) => {
 
     const { expediente, id } = req.body;
 
-    console.log(expediente, id);
-
     await Consultor.findOneAndUpdate({ _id: id },
       {
         $set: {
-          'plantao.fim': expediente
+          'plantao.inicio': expediente.entrada,
+          'plantao.fim': expediente.saida
         }
       })
 
@@ -122,8 +119,6 @@ router.post("/dashboard", async (req, res) => {
   try {
 
     const { id } = req.body;
-
-    console.log(id);
 
     await Agenda.findOneAndUpdate({ consultor: id })
 

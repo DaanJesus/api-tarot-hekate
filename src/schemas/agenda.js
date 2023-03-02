@@ -44,10 +44,6 @@ let AgendaSchema = new mongoose.Schema({
     valorsite: {
         type: String
     },
-    feedback: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Comments'
-    },
     confirma_agenda: {
         type: Boolean
     },
