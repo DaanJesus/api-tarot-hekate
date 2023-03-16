@@ -29,12 +29,13 @@ router.post("/agendar", async (req, res) => {
   }
 });
 
-router.get("/agenda-consultor/:_id", async (req, res) => {
-  const { _id } = req.params;
+router.get("/agenda-consultor/:_id/:data", async (req, res) => {
+  const { _id, data } = req.params;
 
   try {
-    const agenda = await Agenda.find({ consultor: _id })
-      .populate('consultor');
+    const agenda = await Agenda.find({ consultor: _id, 'agenda.inicio_consulta': data })
+      .populate('consultor')
+      .populate('cliente')
 
     res.status(200).json(agenda);
   } catch (err) {
@@ -44,11 +45,11 @@ router.get("/agenda-consultor/:_id", async (req, res) => {
 
 router.get("/minha-agenda/:_id", async (req, res) => {
   const { _id } = req.params;
-  console.log(_id);
 
   try {
     const agenda = await Agenda.find({ cliente: _id })
-      .populate('cliente');
+      .populate('cliente')
+      .populate('consultor');
 
     console.log(agenda);
 

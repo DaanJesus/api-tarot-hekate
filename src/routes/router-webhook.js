@@ -45,11 +45,9 @@ router.get("/:chave", (req, res) => {
 
         gerencianet.pixDetailWebhook(chave)
             .then((resposta) => {
-                console.log(resposta);
                 res.status(200).json(resposta)
             })
             .catch((error) => {
-                console.log(error);
                 res.status(400).json(error)
             })
 
