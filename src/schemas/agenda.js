@@ -38,10 +38,10 @@ let AgendaSchema = new mongoose.Schema({
     valor: {
         type: String
     },
-    valortarologo: {
+    valor_tarologo: {
         type: String
     },
-    valorsite: {
+    valor_site: {
         type: String
     },
     confirma_agenda: {

@@ -1,12 +1,11 @@
 /*
- * Incidente
- * Certificado
  * Author : Daan Oliveira
  */
 
 const express = require("express");
 const Cliente = require("../schemas/cliente");
 const Consultor = require("../schemas/consultor");
+const ResetCode = require("../schemas/resetcode");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -15,6 +14,7 @@ const crypto = require("crypto");
 const multerConfig = require("../config/multer");
 const multer = require("multer");
 const Token = require("../schemas/token");
+const nodemailer = require('nodemailer');
 
 function generateToken(params = {}) {
   return jwt.sign(params, authConfig.secret, {
@@ -38,7 +38,7 @@ router.post("/register", multer(multerConfig).single("file"), async (req, res) =
       size,
       key,
       location: url = "",
-    } = req.file == null? img : req.file;
+    } = req.file == null ? img : req.file;
 
     const {
       name,
@@ -277,23 +277,99 @@ router.post('/validaToken', async (req, res) => {
   }
 })
 
-/* router.get("/get-user", async (req, res) => {
+router.post("/send-email-code", async (req, res) => {
+
   try {
-    const { _id } = req.params;
 
-    console.log(_id);
+    const { email } = req.body;
+    const code = Math.floor(Math.random() * 9000) + 1000;
 
-    const cliente = await Cliente.findOne({ _id }).select("-password");
+    const resp = await ResetCode.create({ code: code })
 
-    if (cliente) {
-      res.status(200).json(cliente);
-    } else {
-      const consultor = await Consultor.findOne({ _id }).select("-password");
-      res.status(200).json(consultor);
+    if (resp) {
+
+      const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
+          user: 'danilo25oliveira@gmail.com',
+          pass: 'aqkfjknipniduagb'
+        }
+      }); // Configura o transporte de e-mail
+
+      const mailOptions = {
+        from: 'danilo25oliveira@gmail.com',
+        to: email,
+        subject: 'Código de redefinição de senha',
+        text: `Seu código de redefinição de senha é: ${code}`
+      }; // Configura as opções do e-mail
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          res.status(400).json('Não foi possível enviar o e-mail: ' + error);
+        } else {
+          console.log('E-mail enviado: ' + info.response);
+          res.status(200).json('E-mail enviado: ' + info.response);
+        }
+      }); // Envia o e-mail
     }
+
   } catch (err) {
     console.log(err);
   }
-}); */
+});
+
+router.post("/valida-code", async (req, res) => {
+
+  console.log(req.body);
+
+  try {
+    const { code } = req.body;
+    const resp = await ResetCode.findOne({ code: code })
+
+    if (resp) {
+      await ResetCode.deleteOne({ code: code })
+      res.status(200).json("Código validado")
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.post("/reset-pass", async (req, res) => {
+
+  console.log(req.body);
+
+  try {
+    var { email, password } = req.body;
+
+    const hash = await bcrypt.hash(password, 10);
+    password = hash;
+
+    const user = await Consultor.findOne({ email: email })
+
+    if (user) {
+      const resp = await Consultor.findOneAndUpdate({ email: email }, { password: password })
+
+      if (resp) {
+        res.status(200).json("Senha alterada com sucesso")
+      } else {
+        res.status(400).json("Não foi possível alterar a senha")
+      }
+    } else {
+      const resp = await Cliente.findOneAndUpdate({ email: email }, { password: password })
+      if (resp) {
+        res.status(200).json("Senha alterada com sucesso")
+      } else {
+        res.status(400).json("Não foi possível alterar a senha")
+      }
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 module.exports = (app) => app.use("/auth", router);
