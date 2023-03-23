@@ -63,7 +63,6 @@ ClienteSchema.pre('save', async function (next) {
 })
 
 ClienteSchema.pre("remove", function () {
-    //console.log("Chegou aqui", this.image.key);
     if (process.env.STORAGE_TYPE == 's3') {
         return s3.deleteObject({
             Bucket: 'tarothekate',

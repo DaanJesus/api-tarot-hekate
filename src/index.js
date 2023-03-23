@@ -154,7 +154,6 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/webhook(/pix)?", async (req, res) => {
-  console.log(req.body);
 
   /* if (req.status == 200) {
     await Pix.findOneAndUpdate({ txid: req.body.pix[0].txid }, {

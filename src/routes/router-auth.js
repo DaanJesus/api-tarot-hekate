@@ -198,8 +198,6 @@ router.post('/geraToken', async (req, res) => {
 
     const { cpf } = req.body
 
-    console.log(cpf);
-
     if (!cpf) {
       res.status(400).json({
         err: "Você deve informar o cpf do tarologo! "
@@ -232,8 +230,6 @@ router.post('/validaToken', async (req, res) => {
   try {
 
     const { token } = req.body
-
-    console.log(req.body);
 
     if (!token) {
       res.status(400).json({
@@ -309,7 +305,6 @@ router.post("/send-email-code", async (req, res) => {
           console.log(error);
           res.status(400).json('Não foi possível enviar o e-mail: ' + error);
         } else {
-          console.log('E-mail enviado: ' + info.response);
           res.status(200).json('E-mail enviado: ' + info.response);
         }
       }); // Envia o e-mail
@@ -321,8 +316,6 @@ router.post("/send-email-code", async (req, res) => {
 });
 
 router.post("/valida-code", async (req, res) => {
-
-  console.log(req.body);
 
   try {
     const { code } = req.body;
@@ -339,8 +332,6 @@ router.post("/valida-code", async (req, res) => {
 });
 
 router.post("/reset-pass", async (req, res) => {
-
-  console.log(req.body);
 
   try {
     var { email, password } = req.body;

@@ -52,9 +52,7 @@ router.get('/status/:txid', async (req, res) => {
 
     try {
         interval = setInterval(async () => {
-            console.log("chegou aqui");
             pixStatus = await reqGn.get(`/v2/cob/${txid}`)
-            console.log(pixStatus);
 
             if (pixStatus && pixStatus.data.status == "CONCLUIDA") {
                 clearInterval(interval);

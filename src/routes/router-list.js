@@ -29,7 +29,6 @@ router.post("/update", async (req, res) => {
       { multi: true }
     );
 
-    console.log("Chegou");
     res.status(200).json(alter);
   } catch (err) {
     console.log(err);
