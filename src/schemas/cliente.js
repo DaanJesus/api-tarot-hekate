@@ -35,10 +35,12 @@ let ClienteSchema = new mongoose.Schema({
     },
     notify: [{
         title: {
-            type: String
+            type: String,
+            default: "Bem vindo"
         },
         description: {
-            type: String
+            type: String,
+            default: "Olá, seja bem vindo ao Tarot da Hekate"
         },
         status: {
             type: Boolean,
