@@ -132,7 +132,7 @@ io.on('connection', (socket) => {
 
   socket.on('reminder-call', data => {
 
-    console.log(data);
+    socket.broadcast.to(data.idUser).emit('get-notify', data)
 
     //socket.broadcast.to(id).emit("received-notify", newData);
   })
